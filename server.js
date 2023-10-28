@@ -14,11 +14,43 @@ const io = require("socket.io")(server, {
 
 require('dotenv').config()
 
-io.on("connection", (socket) => {
+let existingUsers = []
   
-  socket.on("sendUserInfoToServer", (newUserInfo, users) => {
-    io.emit("sendUserInfoToClient", newUserInfo, users )
+io.on("connection", (socket) => {
+
+  socket.on("sendUserInfoToServer", (newUserInfo ) => {
+    //update users
+    let isAlreadyExist = false
+    let indexToReplace = null
+    existingUsers.map((user,index) => {
+      if(user.socketId === newUserInfo.socketId ){
+        isAlreadyExist = true
+        indexToReplace = index
+      }
+    })
+    if(!isAlreadyExist){
+      existingUsers.push(newUserInfo)
+    }else{
+      const arr = [...existingUsers]
+      arr.splice(indexToReplace, 1, newUserInfo)
+      existingUsers = arr
+    }
+    io.emit("sendUsersToClient", existingUsers )
   })
+  
+  socket.on("disconnect", () => {
+    const disconnectedSocketId = socket.id
+    let indexToRemove = null
+    existingUsers.map((user,index) => {
+      if(user.socketId === disconnectedSocketId ){
+        indexToRemove = index
+      }
+    })
+    const arr = [...existingUsers]
+    arr.splice( indexToRemove, 1 )
+    existingUsers = arr
+    io.emit("sendUsersToClient", existingUsers )
+  }) 
   
 })
   /*
