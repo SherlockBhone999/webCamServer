@@ -23,8 +23,7 @@ const io = require("socket.io")(server,{
 io.on("connection", socket => {
   socket.on("sendMessage", (message, room ) => {
     if(room !== ""){
-      //socket.to(room).emit("receiveMessage", message )
-      io.emit("receiveMessage", message)
+      io.to(room).emit("receiveMessage", message)
     }
   })
   
