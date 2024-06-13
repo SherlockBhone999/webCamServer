@@ -40,11 +40,21 @@ io.on("connection", socket => {
       const arr = [...existingDevices]
       arr.splice(indexToReplace, 1, newDeviceInfo)
       existingDevices = arr
-    }     
+    } 
+    
+    //clean out different roomName devices 
+    const arr2 = []
+    existingDevices.map(deviceInfo => {
+      if(deviceInfo.roomName === room){
+        arr2.push(deviceInfo)
+      }
+    })
+    const devicesInTheSameRoom = arr2
+    
     if(room !== ""){
       socket.join(room)
       console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
-      io.to(room).emit("sendAllDevicesToClient", existingDevices )
+      io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     }
 
   })
@@ -63,8 +73,17 @@ io.on("connection", socket => {
     const arr = [...existingDevices]
     arr.splice( indexToRemove, 1 )
     existingDevices = arr
+    
+    const arr2 = []
+    existingDevices.map(deviceInfo => {
+      if(deviceInfo.roomName === room){
+        arr2.push(deviceInfo)
+      }
+    })
+    const devicesInTheSameRoom = arr2
+    
     if(disconnectedDeviceInfo !== null){
-      io.to(disconnectedDeviceInfo?.roomName).emit("sendAllDevicesToClient", existingDevices )
+      io.to(disconnectedDeviceInfo?.roomName).emit("sendAllDevicesToClient", devicesInTheSameRoom)
       console.log(`${disconnectedDeviceInfo?.deviceName} exited ${disconnectedDeviceInfo?.roomName}`)    
     }
   })
@@ -72,7 +91,6 @@ io.on("connection", socket => {
   socket.on("orderTakePhoto", deviceInfo => {
     const socketId = deviceInfo.socketId
     io.to(socketId).emit("takePhoto")
-    console.log("reach orderTakePhoto"+socketId)
   })
   
   socket.on("orderStartRecording", deviceInfo => {
