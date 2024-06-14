@@ -74,8 +74,8 @@ io.on("connection", socket => {
   })
   
 
-  socket.on("deviceDisconnected" , (deviceInfo) => {
-    const disconnectedSocketId = deviceInfo.socketId
+  socket.on("disconnect" , () => {
+    const disconnectedSocketId = socket.id 
     let indexToRemove = null;
     let disconnectedDeviceInfo = null;
     existingDevices.map((deviceInfo,index) => {
