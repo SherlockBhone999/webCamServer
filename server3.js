@@ -68,7 +68,7 @@ io.on("connection", socket => {
           temp.push(deviceInfo)
         }
       })
-      io.to(room).emit("sendAllDevicesToClient", temp )
+      io.to(room2).emit("sendAllDevicesToClient", temp )
     })
     
 
@@ -112,7 +112,7 @@ io.on("connection", socket => {
           temp.push(deviceInfo)
         }
       })
-      io.to(room).emit("sendAllDevicesToClient", temp )
+      io.to(room2).emit("sendAllDevicesToClient", temp )
     })
   
   })
