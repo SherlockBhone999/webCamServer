@@ -44,9 +44,13 @@ io.on("connection", socket => {
     
     //clean out different roomName devices 
     const arr2 = []
+    //must update devices in all other rooms 
+    const allOtherRooms = []
     existingDevices.map(deviceInfo => {
       if(deviceInfo.roomName === room){
         arr2.push(deviceInfo)
+      }else{
+        allOtherRooms.push(deviceInfo.roomName)
       }
     })
     const devicesInTheSameRoom = arr2
@@ -56,11 +60,22 @@ io.on("connection", socket => {
       console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
       io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     }
+    
+    allOtherRooms.map(room => {
+      const temp = []
+      existingDevices.map(deviceInfo => {
+        if(deviceInfo.roomName === room){
+          temp.push(deviceInfo)
+        }
+      })
+      io.to(room).emit("sendAllDevicesToClient", temp )
+    })
+    
 
   })
   
 
-  socket.on("disconnect" , () => {
+  socket.on("disconnect" , (socket) => {
     const disconnectedSocketId = socket.id
     let indexToRemove = null;
     let disconnectedDeviceInfo = null;
@@ -87,6 +102,8 @@ io.on("connection", socket => {
       console.log(`${disconnectedDeviceInfo?.deviceName} exited ${disconnectedDeviceInfo?.roomName}`)    
     }
   })
+  
+  
   
   socket.on("orderTakePhoto", deviceInfo => {
     const socketId = deviceInfo.socketId
