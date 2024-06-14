@@ -55,12 +55,6 @@ io.on("connection", socket => {
     })
     const devicesInTheSameRoom = arr2
     
-    if(room !== ""){
-      socket.join(room)
-      console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
-      io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
-    }
-    
     allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
@@ -72,6 +66,10 @@ io.on("connection", socket => {
       io.to(room2).emit("sendAllDevicesToClient", temp )
     })
   
+    socket.join(room)
+    console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
+    io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
+    
 
   })
   
