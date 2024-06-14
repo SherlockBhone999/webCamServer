@@ -75,8 +75,8 @@ io.on("connection", socket => {
   })
   
 
-  socket.on("disconnect" , (socket) => {
-    const disconnectedSocketId = socket.id
+  socket.on("deviceDisconnected" , (deviceInfo) => {
+    const disconnectedSocketId = deviceInfo.socketId
     let indexToRemove = null;
     let disconnectedDeviceInfo = null;
     existingDevices.map((deviceInfo,index) => {
@@ -90,9 +90,12 @@ io.on("connection", socket => {
     existingDevices = arr
     
     const arr2 = []
+    const allOtherRooms = []
     existingDevices.map(deviceInfo => {
       if(deviceInfo.roomName === room){
         arr2.push(deviceInfo)
+      }else{
+        allOtherRooms.push(deviceInfo.roomName)
       }
     })
     const devicesInTheSameRoom = arr2
@@ -101,6 +104,17 @@ io.on("connection", socket => {
       io.to(disconnectedDeviceInfo?.roomName).emit("sendAllDevicesToClient", devicesInTheSameRoom)
       console.log(`${disconnectedDeviceInfo?.deviceName} exited ${disconnectedDeviceInfo?.roomName}`)    
     }
+    
+    allOtherRooms.map(room => {
+      const temp = []
+      existingDevices.map(deviceInfo => {
+        if(deviceInfo.roomName === room){
+          temp.push(deviceInfo)
+        }
+      })
+      io.to(room).emit("sendAllDevicesToClient", temp )
+    })
+  
   })
   
   
