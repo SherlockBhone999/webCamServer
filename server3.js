@@ -115,18 +115,29 @@ io.on("connection", socket => {
       io.to(room2).emit("sendAllDevicesToClient", temp )
     })
     */
-   const disconnectedSocketId = socket.id 
-   let disconnectedDeviceInfo = null;
-   existingDevices.map(obj => {
-     if(obj.socketId === disconnectedSocketId){
-       disconnectedDeviceInfo = obj
-     }
-   })
+    const disconnectedSocketId = socket.id 
+    let disconnectedDeviceInfo = null;
+    const remainingDevices = []
+    existingDevices.map(obj => {
+      if(obj.socketId === disconnectedSocketId){
+        disconnectedDeviceInfo = obj
+      }else{
+        remainingDevices.push(obj)
+      }
+    })
    
-   const room = disconnectedDeviceInfo.roomName 
+   
+    const remainingDevicesInTheRoom = []
+    const room = disconnectedDeviceInfo.roomName 
+    remainingDevices.map(obj => {
+     if(obj.roomName === room ){
+       remainingDevicesInTheRoom.push(obj)
+     }
+    })
+   
    socket.join(room)
-   io.to(room).emit("sendAllDevicesToClient", [])
-   console.log("send empty to "+room)
+   io.to(room).emit("sendAllDevicesToClient", remainingDevicesInTheRoom)
+   console.log("remainingDevicesInTheRoom", remainingDevicesInTheRoom)
   })
   
   
