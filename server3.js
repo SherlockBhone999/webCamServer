@@ -60,7 +60,7 @@ io.on("connection", socket => {
       console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
       io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     }
-    {/*
+    
     allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
@@ -68,9 +68,10 @@ io.on("connection", socket => {
           temp.push(deviceInfo)
         }
       })
+      socket.join(room2)
       io.to(room2).emit("sendAllDevicesToClient", temp )
     })
-    */}
+  
 
   })
   
