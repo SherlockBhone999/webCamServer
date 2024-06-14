@@ -61,10 +61,10 @@ io.on("connection", socket => {
       io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     }
     
-    allOtherRooms.map(room => {
+    allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
-        if(deviceInfo.roomName === room){
+        if(deviceInfo.roomName === room2){
           temp.push(deviceInfo)
         }
       })
@@ -105,10 +105,10 @@ io.on("connection", socket => {
       console.log(`${disconnectedDeviceInfo?.deviceName} exited ${disconnectedDeviceInfo?.roomName}`)    
     }
     
-    allOtherRooms.map(room => {
+    allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
-        if(deviceInfo.roomName === room){
+        if(deviceInfo.roomName === room2){
           temp.push(deviceInfo)
         }
       })
