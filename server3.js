@@ -60,7 +60,7 @@ io.on("connection", socket => {
       console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
       io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     }
-    
+    {/*
     allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
@@ -70,7 +70,7 @@ io.on("connection", socket => {
       })
       io.to(room2).emit("sendAllDevicesToClient", temp )
     })
-    
+    */}
 
   })
   
@@ -104,7 +104,7 @@ io.on("connection", socket => {
       io.to(disconnectedDeviceInfo?.roomName).emit("sendAllDevicesToClient", devicesInTheSameRoom)
       console.log(`${disconnectedDeviceInfo?.deviceName} exited ${disconnectedDeviceInfo?.roomName}`)    
     }
-    
+    {/*
     allOtherRooms.map(room2 => {
       const temp = []
       existingDevices.map(deviceInfo => {
@@ -114,7 +114,7 @@ io.on("connection", socket => {
       })
       io.to(room2).emit("sendAllDevicesToClient", temp )
     })
-  
+    */}
   })
   
   
