@@ -1,7 +1,7 @@
 
 const express = require("express")
 const app = express()
-
+ 
 const http = require('http')
 const server = http.createServer(app)
 require('dotenv').config()
@@ -103,16 +103,38 @@ io.on("connection", socket => {
    
   })
   
+   
   
-  
-  socket.on("orderTakePhoto", deviceInfo => {
-    const socketId = deviceInfo.socketId
-    io.to(socketId).emit("takePhoto")
+  socket.on("orderCapturePhoto", (twoDevices) => {
+    const senderId = twoDevices.sender.socketId
+    io.to(senderId).emit("capturePhoto", twoDevices )
   })
   
-  socket.on("orderStartRecording", deviceInfo => {
-    const socketId = deviceInfo.socketId
-    io.to(socketId).emit("startRecording")
+  socket.on("orderStartRecording", (senderId) => {
+    io.to(senderId).emit("startRecording")
+  })
+  
+  socket.on("orderStopRecording", (twoDevices) => {
+    const senderId = twoDevices.sender.socketId
+    io.to(senderId).emit("stopRecording", twoDevices )
+  })
+  
+  socket.on("orderTurnCamera" , (senderId) => {
+    io.to(senderId).emit("turnCamera")
+  })
+  
+  socket.on("feedbackPhotoSaved" , (twoDevices) => {
+      const senderName = twoDevices.sender.deviceName 
+      const receiverId = twoDevices.receiver.socketId
+      const message = `${senderName} saved a photo`
+    io.to(receiverId).emit("displayFeedback", message )
+  })
+  
+  socket.on("feedbackVideoSaved" , (twoDevices) => {
+      const senderName = twoDevices.sender.deviceName 
+      const receiverId = twoDevices.receiver.socketId
+      const message = `${senderName} saved a video`
+    io.to(receiverId).emit("displayFeedback", message )
   })
   
 })
