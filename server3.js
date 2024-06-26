@@ -111,7 +111,7 @@ io.on("connection", socket => {
   })
   
   socket.on("orderStartRecording", (senderId) => {
-    io.to(senderId).emit("startRecording")
+    io.to(senderId).emit("startRecording", null)
   })
   
   socket.on("orderStopRecording", (twoDevices) => {
@@ -120,7 +120,7 @@ io.on("connection", socket => {
   })
   
   socket.on("orderTurnCamera" , (senderId) => {
-    io.to(senderId).emit("turnCamera")
+    io.to(senderId).emit("turnCamera", null)
   })
   
   socket.on("feedbackPhotoSaved" , (twoDevices) => {
