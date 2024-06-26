@@ -14,7 +14,7 @@ server.listen(port , () => {
 
 const io = require("socket.io")(server,{
   cors : {
-    origin : ["http://localhost:5173","https://webcam2testr.onrender.com"],
+    origin : ["http://localhost:5173","https://webcam2testr.onrender.com","https://webcam-pc1u.onrender.com"],
     methods: [ "GET", "POST" ]
   }
 })
