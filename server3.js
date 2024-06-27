@@ -5,7 +5,7 @@ const app = express()
 const http = require('http')
 const server = http.createServer(app)
 require('dotenv').config()
-
+ 
 const port = process.env.PORT
 server.listen(port , () => {
   console.log("server listening on port 3000")
@@ -67,7 +67,6 @@ io.on("connection", socket => {
     })
   
     socket.join(room)
-    console.log(`${newDeviceInfo.deviceName} joined ${newDeviceInfo.roomName}`)
     io.to(room).emit("sendAllDevicesToClient", devicesInTheSameRoom )
     
 
@@ -99,7 +98,6 @@ io.on("connection", socket => {
    
    socket.join(room)
    io.to(room).emit("sendAllDevicesToClient", remainingDevicesInTheRoom)
-   console.log("remainingDevicesInTheRoom", remainingDevicesInTheRoom)
    
   })
   
@@ -108,10 +106,11 @@ io.on("connection", socket => {
   socket.on("orderCapturePhoto", (twoDevices) => {
     const senderId = twoDevices.sender.socketId
     io.to(senderId).emit("capturePhoto", twoDevices )
+
   })
   
   socket.on("orderStartRecording", (senderId) => {
-    io.to(senderId).emit("startRecording", null)
+    io.to(senderId).emit("startRecording")
   })
   
   socket.on("orderStopRecording", (twoDevices) => {
@@ -119,8 +118,10 @@ io.on("connection", socket => {
     io.to(senderId).emit("stopRecording", twoDevices )
   })
   
-  socket.on("orderTurnCamera" , (senderId) => {
-    io.to(senderId).emit("turnCamera", null)
+  socket.on("orderTurnCamera" , (sender) => {
+    const senderId = sender.socketId
+    const senderFacingMode = sender.facingMode
+    io.to(senderId).emit("turnCamera", senderFacingMode)
   })
   
   socket.on("feedbackPhotoSaved" , (twoDevices) => {
