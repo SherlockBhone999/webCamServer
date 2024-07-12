@@ -139,6 +139,11 @@ io.on("connection", socket => {
     io.to(receiverId).emit("displayFeedback", message )
   })
   
+  socket.on("orderClosePeerConnection", (senderId) => {
+
+    io.to(senderId).emit("closePeerConnection")
+  })
+  
 })
 
 
