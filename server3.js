@@ -140,8 +140,11 @@ io.on("connection", socket => {
   })
   
   socket.on("orderClosePeerConnection", (senderId) => {
-
     io.to(senderId).emit("closePeerConnection")
+  })
+  
+  socket.on("cameraIsSwitching" , (receiverId) => {
+    io.to(receiverId).emit("showLoading")
   })
   
 })
